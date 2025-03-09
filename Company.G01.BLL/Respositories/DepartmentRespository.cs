@@ -12,9 +12,9 @@ namespace Company.G01.BLL.Respositories
     {
         private CompanyDbContext _Context;
 
-        public DepartmentRespository()
+        public DepartmentRespository(CompanyDbContext context)
         {
-            _Context = new CompanyDbContext();
+            _Context = context;
         }
 
         public IEnumerable<Department> GetAll()
