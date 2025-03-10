@@ -49,6 +49,15 @@ namespace Company.G01.PL.Controllers
             return View(model);
         }
 
-
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var department = _departmentRespository.Get(id);
+            if (department == null)
+            {
+                return NotFound();
+            }
+            return View(department);
+        }
     }
 }
