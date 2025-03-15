@@ -19,7 +19,8 @@
     </div>
     <div class="my-3">
         <label asp-for="CreateAt" class="col-from-label"></label>
-        <input asp-for="CreateAt" class="form-control" value="@Model.CreateAt.ToString()" readonly  />
+
+        <input asp-for="CreateAt" class="form-control"  readonly  />
     </div>
 
     <div class="my-3">
@@ -27,4 +28,5 @@
         <a asp-action="Index" class="btn btn-light">Back To List</a>
     </div>
 </form>
+
 
