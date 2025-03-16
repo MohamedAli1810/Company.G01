@@ -22,7 +22,11 @@ namespace Company.G01.BLL.Respositories
             return _Context.Departments.ToList();
         }
 
+<<<<<<< HEAD
+        public Department Get(int? id)
+=======
         public Department? Get(int id)
+>>>>>>> 9c76c71d506f51e1d04347519ad3d8b412a0aca4
         {
             return _Context.Departments.Find(id);
         }
@@ -43,5 +47,11 @@ namespace Company.G01.BLL.Respositories
             _Context.Departments.Remove(model);
             return _Context.SaveChanges();
         }
+<<<<<<< HEAD
+
+
+        
+=======
+>>>>>>> 9c76c71d506f51e1d04347519ad3d8b412a0aca4
     }
 }
