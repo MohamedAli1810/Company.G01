@@ -10,10 +10,10 @@ namespace Company.G01.BLL.Respositories
     public interface IDepartmentRespository
     {
         IEnumerable<Department> GetAll();
-        Department? Get(int id);
-
+        Department Get(int? id);
         int Add(Department model); 
         int Update(Department model); 
         int Delete(Department model);
+        
     }
 }
