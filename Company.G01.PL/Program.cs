@@ -16,7 +16,7 @@ namespace Company.G01.PL
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddScoped<IDepartmentRespository, DepartmentRespository>();
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
             builder.Services.AddDbContext<CompanyDbContext>(options => 
             {
