@@ -8,8 +8,6 @@ namespace Company.G01.DAL.Models
 {
     public class Employee : BaseEntity
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public int? Age { get; set; }
