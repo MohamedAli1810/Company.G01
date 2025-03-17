@@ -10,9 +10,9 @@ namespace Company.G01.PL.Controllers
     // MVC Controller
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRespository _departmentRespository;
+        private readonly IDepartmentRepository _departmentRespository;
 
-        public DepartmentController(IDepartmentRespository departmentRespository)
+        public DepartmentController(IDepartmentRepository departmentRespository)
         {
             _departmentRespository = departmentRespository;
         }
