@@ -123,7 +123,7 @@ namespace Company.G01.PL.Controllers
         //}
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public IActionResult? Delete(int? id)
         {
             //var department = _departmentRespository.Get(id);
             //if (department == null)
@@ -136,7 +136,7 @@ namespace Company.G01.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Department department)
+        public IActionResult Delete([FromRoute] int? id, Department department)
         {
             if (ModelState.IsValid)
             {

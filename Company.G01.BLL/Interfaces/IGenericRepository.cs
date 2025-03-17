@@ -11,7 +11,7 @@ namespace Company.G01.BLL.Interfaces
     {
         IEnumerable<T> GetAll();
 
-        T? Get(int id);
+        T? Get(int? id);
 
         int Add(T model);
 
