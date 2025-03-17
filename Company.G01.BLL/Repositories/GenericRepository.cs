@@ -23,7 +23,7 @@ namespace Company.G01.BLL.Repositories
             return _context.Set<T>().ToList();
         }
 
-        public T? Get(int id)
+        public T Get(int? id)
         {
             return _context.Set<T>().Find(id);
         }
