@@ -9,10 +9,12 @@ namespace Company.G01.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IDepartmentRepository _departmentRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository, IDepartmentRepository departmentRepository)
         {
             _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
         }
 
         public IActionResult Index()
@@ -33,6 +35,8 @@ namespace Company.G01.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            var departments = _departmentRepository.GetAll();
+            ViewData["departments"] = departments;
             return View();
         }
 
@@ -55,6 +59,7 @@ namespace Company.G01.PL.Controllers
                         IsDeleted = model.IsDeleted,
                         Phone = model.Phone,
                         Salary = model.Salary,
+                        DepartmentId = model.DepartmentId,
                     };
                     var count = _employeeRepository.Add(employee);
                     if (count > 0)
@@ -83,6 +88,8 @@ namespace Company.G01.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id) 
         {
+            var departments = _departmentRepository.GetAll();
+            ViewData["departments"] = departments;
             if (id is null) return BadRequest("Invalid Id");
             var employee = _employeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { StatusCode = 404, Message = $"Employee with Id : {id} is not found " });
@@ -98,6 +105,7 @@ namespace Company.G01.PL.Controllers
                 IsDeleted = employee.IsDeleted,
                 Phone = employee.Phone,
                 Salary = employee.Salary,
+                Department = employee.Department
             };
             return View(employeeDto);
         }
@@ -122,6 +130,7 @@ namespace Company.G01.PL.Controllers
                     IsDeleted = model.IsDeleted,
                     Phone = model.Phone,
                     Salary = model.Salary,
+                    DepartmentId = model.DepartmentId
                 };
                 var count = _employeeRepository.Update(employee);
                 if (count > 0) 
