@@ -18,6 +18,15 @@ namespace Company.G01.PL.Controllers
         public IActionResult Index()
         {
             var employees = _employeeRepository.GetAll();
+
+            // Dictionary
+            // 1. ViewData
+            //ViewData["Message"] = "Hello From ViewData";
+            // 2. ViewBag
+            //ViewBag.Message = "Hello From ViewBag";
+            // 3. TempData
+
+
             return View(employees);
         }
 
@@ -32,23 +41,31 @@ namespace Company.G01.PL.Controllers
         {
             if (ModelState.IsValid) 
             {
-                var employee = new Employee()
+                try
                 {
-                    Name = model.Name,
-                    Age = model.Age,
-                    Address = model.Address,
-                    CreateAt = model.CreateAt,
-                    HiringDate = model.HiringDate,
-                    Email = model.Email,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    Phone = model.Phone,
-                    Salary = model.Salary,
-                };
-                var count = _employeeRepository.Add(employee);
-                if (count > 0)
+                    var employee = new Employee()
+                    {
+                        Name = model.Name,
+                        Age = model.Age,
+                        Address = model.Address,
+                        CreateAt = model.CreateAt,
+                        HiringDate = model.HiringDate,
+                        Email = model.Email,
+                        IsActive = model.IsActive,
+                        IsDeleted = model.IsDeleted,
+                        Phone = model.Phone,
+                        Salary = model.Salary,
+                    };
+                    var count = _employeeRepository.Add(employee);
+                    if (count > 0)
+                    {
+                        TempData["Message"] = "Employee is created";
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                catch (Exception ex)
                 {
-                    return RedirectToAction(nameof(Index));
+                    ModelState.AddModelError("",ex.Message);
                 }
             }
             return View(model);
