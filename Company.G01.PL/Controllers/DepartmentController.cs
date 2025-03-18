@@ -55,7 +55,7 @@ namespace Company.G01.PL.Controllers
         public IActionResult Details(int? id, string viewName = "Details")
 
         {
-            var department = _departmentRespository.Get(id);
+            var department = _departmentRespository.Get(id.Value);
             if (department == null)
             {
                 return NotFound();
@@ -69,22 +69,35 @@ namespace Company.G01.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            //var department = _departmentRespository.Get(id);
-            //if (department == null)
-            //{
-            //    return NotFound();
-            //}
-            //if (department is null) return NotFound(new { StatusCode = 404, Message = $"Department with Id :{id} is not found" });
-            return Details(id , "Edit");
+            var department = _departmentRespository.Get(id.Value);
+            if (department == null)
+            {
+                return NotFound();
+            }
+            if (department is null) return NotFound(new { StatusCode = 404, Message = $"Department with Id :{id} is not found" });
+            var departmentDto = new CreateDepartmentDto() 
+            {
+                Code = department.Code,
+                Name = department.Name,
+                CreateAt = department.CreateAt
+            };
+            return View(departmentDto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Department department)
+        public IActionResult Edit([FromRoute] int id, CreateDepartmentDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id != department.Id) return BadRequest(); //400     
+                //if (id != department.Id) return BadRequest(); //400
+                var department = new Department()
+                {
+                    Id = id,
+                    Code = model.Code,
+                    Name = model.Name,
+                    CreateAt = model.CreateAt
+                };
                 var count = _departmentRespository.Update(department);
 
                 if (count > 0)
@@ -93,7 +106,7 @@ namespace Company.G01.PL.Controllers
                 }
             }
 
-            return View(department);
+            return View(model);
 
         }
 
