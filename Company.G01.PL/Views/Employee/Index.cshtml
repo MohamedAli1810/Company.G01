@@ -1,9 +1,29 @@
 ﻿@model IEnumerable<Employee>
 @{
     ViewData["Title"] = "Index";
+    // string? ViewDataMessage = ViewData["Message"] as string;
+    // string? ViewBagMessage = ViewBag.Message;
 }
 
 <h1>All Empolyee</h1>
+
+<br />
+<br />
+
+@* <div class="m-3 alert alert-danger">
+    <p>@ViewData["Message"]</p>
+</div> *@
+@* <div class="m-3 alert alert-danger">
+    <p>@ViewBag.Message </p>
+</div> *@
+
+@if(!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+
+    <div class="m-3 alert alert-danger">
+        <p>@TempData["Message"] </p>
+    </div>
+}
 
 <br />
 <br />
