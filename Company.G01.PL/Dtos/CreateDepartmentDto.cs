@@ -13,6 +13,6 @@ namespace Company.G01.PL.Dtos
 
         [Required(ErrorMessage = "CreateAt is Required !")]
         public DateTime CreateAt { get; set; }
-        public List<Employee> Employees { get; set; }
+        public List<Employee>? Employees { get; set; }
     }
 }
