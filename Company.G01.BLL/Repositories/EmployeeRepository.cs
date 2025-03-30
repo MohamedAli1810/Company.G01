@@ -59,5 +59,10 @@ namespace Company.G01.BLL.Respositories
         {
           return _context.Employees.Include(E => E.Department).Where(e => e.Name.ToLower().Contains(name.ToLower())).ToList();
         }
+
+        IEnumerable<Employee> IEmployeeRepository.GetByName(string searchInput)
+        {
+            return GetByName(searchInput);
+        }
     }
 }
