@@ -112,7 +112,6 @@ namespace Company.G01.PL.Controllers
             if (id is null) return BadRequest("Invalid Id");
             var employee = _employeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { StatusCode = 404, Message = $"Employee with Id : {id} is not found " });
-
             var employeeDto = _mapper.Map<CreateEmployeeDto>(employee);
             return View(employeeDto);
         }
@@ -163,7 +162,7 @@ namespace Company.G01.PL.Controllers
             {
                 return NotFound(new { StatusCode = 404, Message = $"Employee with Id {id} not found" });
             }
-           
+
             // Map only the fields that need updating
             _mapper.Map(model, existingEmployee);
 
