@@ -1,4 +1,5 @@
-﻿using Company.G01.BLL.Interfaces;
+﻿using AutoMapper;
+using Company.G01.BLL.Interfaces;
 using Company.G01.DAL.Models;
 using Company.G01.PL.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Company.G01.PL.Controllers
     public class DepartmentController : Controller
     {
         private readonly IDepartmentRepository _departmentRespository;
+        private readonly IMapper _mapper;
 
-        public DepartmentController(IDepartmentRepository departmentRespository)
+        public DepartmentController(IDepartmentRepository departmentRespository , IMapper mapper)
         {
             _departmentRespository = departmentRespository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -36,12 +39,13 @@ namespace Company.G01.PL.Controllers
         {
             if (ModelState.IsValid) 
             {
-                var department = new Department() 
-                {
-                    Code = model.Code,
-                    Name = model.Name,
-                    CreateAt = model.CreateAt
-                };
+                //var department = new Department() 
+                //{
+                //    Code = model.Code,
+                //    Name = model.Name,
+                //    CreateAt = model.CreateAt
+                //};
+                var department = _mapper.Map<Department>(model);
                 var count = _departmentRespository.Add(department);
                 if (count > 0) 
                 {
@@ -84,30 +88,59 @@ namespace Company.G01.PL.Controllers
             return View(departmentDto);
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Edit([FromRoute] int id, CreateDepartmentDto model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        //if (id != department.Id) return BadRequest(); //400
+        //        //var department = new Department()
+        //        //{
+        //        //    Id = id,
+        //        //    Code = model.Code,
+        //        //    Name = model.Name,
+        //        //    CreateAt = model.CreateAt
+        //        //};
+        //        var department = _mapper.Map<Department>(model);
+        //        var count = _departmentRespository.Update(department);
+
+        //        if (count > 0)
+        //        {
+        //            return RedirectToAction(nameof(Index));
+        //        }
+        //    }
+
+        //    return View(model);
+
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute] int id, CreateDepartmentDto model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                //if (id != department.Id) return BadRequest(); //400
-                var department = new Department()
-                {
-                    Id = id,
-                    Code = model.Code,
-                    Name = model.Name,
-                    CreateAt = model.CreateAt
-                };
-                var count = _departmentRespository.Update(department);
-
-                if (count > 0)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
+                return View(model);
             }
 
-            return View(model);
+            var existingDepartment = _departmentRespository.Get(id);
+            if (existingDepartment == null)
+            {
+                return NotFound(new { StatusCode = 404, Message = $"Department with Id {id} not found" });
+            }
 
+            // Map only the fields that need updating
+            _mapper.Map(model, existingDepartment);
+
+            var count = _departmentRespository.Update(existingDepartment);
+            if (count > 0)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            ModelState.AddModelError("", "Failed to update department.");
+            return View(model);
         }
 
         //[HttpPost]

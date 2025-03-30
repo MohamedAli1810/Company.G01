@@ -2,6 +2,7 @@ using Company.G01.BLL.Interfaces;
 using Company.G01.BLL.Respositories;
 using Company.G01.DAL.Data.Contexts;
 using Company.G01.DAL.Models;
+using Company.G01.PL.Mapping;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,9 @@ namespace Company.G01.PL
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
             });
+            //builder.Services.AddAutoMapper(typeof(EmployeeProfile));
+            builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+            builder.Services.AddAutoMapper(M => M.AddProfile(new DepartmentProfile()));
 
             var app = builder.Build();
 
