@@ -18,8 +18,6 @@ namespace Company.G01.BLL.Interfaces
         //int Update(Employee model);
 
         //int Delete(Employee model);
-
-        List<Employee> GetByName(string name);
-
+        IEnumerable<Employee> GetByName(string searchInput);
     }
 }
