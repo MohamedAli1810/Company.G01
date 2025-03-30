@@ -7,11 +7,13 @@ using Company.G01.BLL.Interfaces;
 using Company.G01.BLL.Repositories;
 using Company.G01.DAL.Data.Contexts;
 using Company.G01.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Company.G01.BLL.Respositories
 {
     public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
+        private readonly CompanyDbContext _context;
         #region MyRegion
         //private readonly CompanyDbContext _context;
 
@@ -50,6 +52,12 @@ namespace Company.G01.BLL.Respositories
         #endregion
         public EmployeeRepository(CompanyDbContext context) : base(context)
         {
+            _context = context;
+        }
+
+        public List<Employee> GetByName(string name)
+        {
+          return _context.Employees.Include(E => E.Department).Where(e => e.Name.ToLower().Contains(name.ToLower())).ToList();
         }
     }
 }

@@ -19,5 +19,7 @@ namespace Company.G01.BLL.Interfaces
 
         //int Delete(Employee model);
 
+        List<Employee> GetByName(string name);
+
     }
 }
