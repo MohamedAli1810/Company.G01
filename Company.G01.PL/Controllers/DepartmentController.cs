@@ -11,19 +11,24 @@ namespace Company.G01.PL.Controllers
     // MVC Controller
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRepository _departmentRespository;
+        //private readonly IDepartmentRepository _departmentRespository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public DepartmentController(IDepartmentRepository departmentRespository , IMapper mapper)
+        public DepartmentController(
+            //IDepartmentRepository departmentRespository,
+            IUnitOfWork unitOfWork,
+            IMapper mapper)
         {
-            _departmentRespository = departmentRespository;
+            //_departmentRespository = departmentRespository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var departments = _departmentRespository.GetAll();
+            var departments = _unitOfWork.DepartmentRepository.GetAll();
 
             return View(departments);
         }
@@ -46,7 +51,8 @@ namespace Company.G01.PL.Controllers
                 //    CreateAt = model.CreateAt
                 //};
                 var department = _mapper.Map<Department>(model);
-                var count = _departmentRespository.Add(department);
+                _unitOfWork.DepartmentRepository.Add(department);
+                var count = _unitOfWork.Complete();
                 if (count > 0) 
                 {
                     return RedirectToAction(nameof(Index));
@@ -59,7 +65,7 @@ namespace Company.G01.PL.Controllers
         public IActionResult Details(int? id, string viewName = "Details")
 
         {
-            var department = _departmentRespository.Get(id.Value);
+            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
             if (department == null)
             {
                 return NotFound();
@@ -73,7 +79,7 @@ namespace Company.G01.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            var department = _departmentRespository.Get(id.Value);
+            var department = _unitOfWork.DepartmentRepository.Get(id.Value);
             if (department == null)
             {
                 return NotFound();
@@ -124,7 +130,7 @@ namespace Company.G01.PL.Controllers
                 return View(model);
             }
 
-            var existingDepartment = _departmentRespository.Get(id);
+            var existingDepartment = _unitOfWork.DepartmentRepository.Get(id);
             if (existingDepartment == null)
             {
                 return NotFound(new { StatusCode = 404, Message = $"Department with Id {id} not found" });
@@ -133,7 +139,8 @@ namespace Company.G01.PL.Controllers
             // Map only the fields that need updating
             _mapper.Map(model, existingDepartment);
 
-            var count = _departmentRespository.Update(existingDepartment);
+            _unitOfWork.DepartmentRepository.Update(existingDepartment);
+            var count = _unitOfWork.Complete();
             if (count > 0)
             {
                 return RedirectToAction(nameof(Index));
@@ -187,8 +194,8 @@ namespace Company.G01.PL.Controllers
             if (ModelState.IsValid)
             {
                 if (id != department.Id) return BadRequest(); //400     
-                var count = _departmentRespository.Delete(department);
-
+                _unitOfWork.DepartmentRepository.Delete(department);
+                var count = _unitOfWork.Complete();
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
