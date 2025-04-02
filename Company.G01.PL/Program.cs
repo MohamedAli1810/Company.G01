@@ -1,4 +1,5 @@
 using Company.G01.BLL.Interfaces;
+using Company.G01.BLL;
 using Company.G01.BLL.Respositories;
 using Company.G01.DAL.Data.Contexts;
 using Company.G01.DAL.Models;
@@ -17,9 +18,12 @@ namespace Company.G01.PL
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
             builder.Services.AddDbContext<CompanyDbContext>(options => 
             {
