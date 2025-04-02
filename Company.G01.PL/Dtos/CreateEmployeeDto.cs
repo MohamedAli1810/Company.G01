@@ -31,6 +31,8 @@ namespace Company.G01.PL.Dtos
         [DisplayName("Department")]
         public int? DepartmentId { get; set; }
 
-        public Department? Department { get; set; }
+        // public Department? Department { get; set; }
+
+        public string? DepartmentName { get; set; }
     }
 }
