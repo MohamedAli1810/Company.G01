@@ -1,4 +1,4 @@
-﻿@model Employee
+﻿@model CreateEmployeeDto
 @{
     ViewData["Title"] = "Details";
 }
@@ -11,7 +11,7 @@
 <form>
     <partial name="EmployeePartialView/_DeleteDetailsPartialView.cshtml" />
     <div class="my-3">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        <a asp-action="Edit" class="btn btn-primary">Edit</a>
         <a asp-action="Index" class="btn btn-light">Back To List</a>
     </div>
 </form>

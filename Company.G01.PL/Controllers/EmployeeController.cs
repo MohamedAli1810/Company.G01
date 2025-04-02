@@ -99,9 +99,12 @@ namespace Company.G01.PL.Controllers
         {
             if (id is null) return BadRequest("Invalid Id");
             var employee = _employeeRepository.Get(id.Value);
-            var departments = _departmentRepository.Get(id.Value);
+            
             if (employee is null) return NotFound(new { StatusCode = 404 , Message = $"Employee with Id : {id} is not found " });
-            return View(viewName, employee);
+
+            var dto = _mapper.Map<CreateEmployeeDto>(employee);
+
+            return View(viewName, dto);
         }
 
         [HttpGet]
@@ -116,65 +119,50 @@ namespace Company.G01.PL.Controllers
             return View(employeeDto);
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Edit([FromRoute] int id , CreateEmployeeDto model) 
-        //{
-        //    if (ModelState.IsValid) 
-        //    {
-        //        //if (id != model.Id) return BadRequest();
-        //        //var employee = new Employee()
-        //        //{
-        //        //    Id = id,
-        //        //    Name = model.Name,
-        //        //    Age = model.Age,
-        //        //    Address = model.Address,
-        //        //    CreateAt = model.CreateAt,
-        //        //    HiringDate = model.HiringDate,
-        //        //    Email = model.Email,
-        //        //    IsActive = model.IsActive,
-        //        //    IsDeleted = model.IsDeleted,
-        //        //    Phone = model.Phone,
-        //        //    Salary = model.Salary,
-        //        //    DepartmentId = model.DepartmentId
-        //        //};
-        //        var employee = _mapper.Map<Employee>(model); ;
-        //        var count = _employeeRepository.Update(employee);
-        //        if (count > 0) 
-        //        {
-        //            return RedirectToAction(nameof(Index));
-        //        }
-        //    }
-        //    return View(model);
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, CreateEmployeeDto model)
+        public IActionResult Edit([FromRoute] int id, CreateEmployeeDto model , string viewName = "Edit")
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
+                var employee = _mapper.Map<Employee>(model); 
+                employee.Id = id;
+                var count = _employeeRepository.Update(employee);
+                if (count > 0)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
-
-            var existingEmployee = _employeeRepository.Get(id);
-            if (existingEmployee == null)
-            {
-                return NotFound(new { StatusCode = 404, Message = $"Employee with Id {id} not found" });
-            }
-
-            // Map only the fields that need updating
-            _mapper.Map(model, existingEmployee);
-
-            var count = _employeeRepository.Update(existingEmployee);
-            if (count > 0)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            ModelState.AddModelError("", "Failed to update employee.");
-            return View(model);
+            return View(viewName,model);
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Edit([FromRoute] int id, CreateEmployeeDto model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
+
+        //    var existingEmployee = _employeeRepository.Get(id);
+        //    if (existingEmployee == null)
+        //    {
+        //        return NotFound(new { StatusCode = 404, Message = $"Employee with Id {id} not found" });
+        //    }
+
+        //    // Map only the fields that need updating
+        //    _mapper.Map(model, existingEmployee);
+
+        //    var count = _employeeRepository.Update(existingEmployee);
+        //    if (count > 0)
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    ModelState.AddModelError("", "Failed to update employee.");
+        //    return View(model);
+        //}
 
         [HttpGet]
         public IActionResult Delete(int? id)
@@ -184,12 +172,13 @@ namespace Company.G01.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int? id, Employee model)
+        public IActionResult Delete([FromRoute] int id, CreateEmployeeDto model)
         {
             if (ModelState.IsValid)
             {
-                if (id != model.Id) return BadRequest();
-                var count = _employeeRepository.Delete(model);
+                var employee = _mapper.Map<Employee>(model);
+                employee.Id = id;
+                var count = _employeeRepository.Delete(employee);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
