@@ -2,7 +2,9 @@
 using Company.G01.BLL.Interfaces;
 using Company.G01.DAL.Models;
 using Company.G01.PL.Dtos;
+using Company.G01.PL.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -81,6 +83,12 @@ namespace Company.G01.PL.Controllers
                     //    Salary = model.Salary,
                     //    DepartmentId = model.DepartmentId,
                     //};
+
+                    if (model.Image is not null) 
+                    {
+                       model.ImageName = DocumentSettings.UploadFile(model.Image, "images");
+                    }
+
                     var employee = _mapper.Map<Employee>(model);
                     _unitOfWork.EmployeeRepository.Add(employee);
                     var count = _unitOfWork.Complete();
@@ -129,6 +137,16 @@ namespace Company.G01.PL.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.ImageName is not null && model.Image is not null) 
+                {
+                    DocumentSettings.DeleteFile(model.ImageName, "images");
+                }
+
+                if(model.Image is not null) 
+                {
+                    model.ImageName = DocumentSettings.UploadFile(model.Image, "images");
+                }
+
                 var employee = _mapper.Map<Employee>(model); 
                 employee.Id = id;
                 _unitOfWork.EmployeeRepository.Update(employee);
@@ -187,6 +205,10 @@ namespace Company.G01.PL.Controllers
                 var count = _unitOfWork.Complete();
                 if (count > 0)
                 {
+                    if (model.ImageName is not null)
+                    {
+                        DocumentSettings.DeleteFile(model.ImageName, "images");
+                    }
                     return RedirectToAction(nameof(Index));
                 }
             }
