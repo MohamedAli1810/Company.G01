@@ -55,14 +55,9 @@ namespace Company.G01.BLL.Respositories
             _context = context;
         }
 
-        public List<Employee> GetByName(string name)
+        public async Task<List<Employee>> GetByNameAsync(string name)
         {
-          return _context.Employees.Include(E => E.Department).Where(e => e.Name.ToLower().Contains(name.ToLower())).ToList();
-        }
-
-        IEnumerable<Employee> IEmployeeRepository.GetByName(string searchInput)
-        {
-            return GetByName(searchInput);
-        }
+          return await _context.Employees.Include(E => E.Department).Where(e => e.Name.ToLower().Contains(name.ToLower())).ToListAsync();
+        }  
     }
 }
