@@ -26,7 +26,8 @@ namespace Company.G01.PL
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddIdentity<AppUser, IdentityRole>()
-                            .AddEntityFrameworkStores<CompanyDbContext>();
+                            .AddEntityFrameworkStores<CompanyDbContext>()
+                            .AddDefaultTokenProviders();
             
 
             builder.Services.AddDbContext<CompanyDbContext>(options => 
@@ -43,6 +44,7 @@ namespace Company.G01.PL
                     config.LoginPath = "/Account/SignIn";
 
             });
+
 
             var app = builder.Build();
 
