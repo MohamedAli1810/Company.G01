@@ -6,6 +6,7 @@ using Company.G01.DAL.Models;
 using Company.G01.PL.Mapping;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Company.G01.PL
 {
@@ -24,6 +25,9 @@ namespace Company.G01.PL
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                            .AddEntityFrameworkStores<CompanyDbContext>();
+            
 
             builder.Services.AddDbContext<CompanyDbContext>(options => 
             {
@@ -33,6 +37,12 @@ namespace Company.G01.PL
             //builder.Services.AddAutoMapper(typeof(EmployeeProfile));
             builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
             builder.Services.AddAutoMapper(M => M.AddProfile(new DepartmentProfile()));
+
+            builder.Services.ConfigureApplicationCookie( config => 
+                {
+                    config.LoginPath = "/Account/SignIn";
+
+            });
 
             var app = builder.Build();
 
@@ -48,6 +58,10 @@ namespace Company.G01.PL
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
 
 
             app.MapControllerRoute(
