@@ -1,15 +1,15 @@
-﻿@model UserToReturnDto
+﻿@model RoleToReturnDto
 @{
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete User</h1>
+<h1>Delete Role</h1>
 
 <br />
 <br />
 
 <form asp-action="Delete">
-    <partial name="UserPartialView/_DeleteDetailsPartialView.cshtml" />
+    <partial name="RolePartialView/_DeleteDetailsPartialView.cshtml" />
     <div class="my-3">
         <input type="submit" value="Delete" class="btn btn-danger" />
         <a asp-action="Index" class="btn btn-light">Back To List</a>
